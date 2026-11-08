@@ -40,7 +40,7 @@ const Api = (() => {
     users: {
       list: () => request('GET', '/users/byusername'),
       //get: (id) => request('GET', `/users/${id}`), //Creeo que aqui es donde hace la busqueda por id
-      get: (username) => request('GET', `/users/byusername/${username}`),
+      get: (id) => request('GET', `/users/${id}`),
       create: (u) => request('POST', '/users', u),
       update: (id, u) => request('PATCH', `/users/${id}`, u),
       remove: (id) => request('DELETE', `/users/${id}`),
