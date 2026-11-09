@@ -38,7 +38,7 @@ const Api = (() => {
   return {
     onLog,
     users: {
-      list: () => request('GET', '/users/byusername/john_doe'),
+      list: () => request('GET', '/users'),
       get: (id) => request('GET', `/users/${id}`), //Creeo que aqui es donde hace la busqueda por id
       //get: (name) => request('GET', `/users/byusername/${name}`),
       create: (u) => request('POST', '/users', u),
