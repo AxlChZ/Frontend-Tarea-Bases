@@ -194,10 +194,47 @@
         select,
         el('div', { class: 'row' },
           el('button', { class: 'btn ghost small', onclick: () => openTaskDialog(t) }, 'Editar'),
-          el('button', { class: 'btn danger small', onclick: () => deleteTask(t) }, 'Eliminar'))));
+          el('button', { class: 'btn danger small', onclick: () => deleteTask(t) }, 'Eliminar'),
+          ...(t.status !== 'PENDING' ? [el('button', { class: 'btn ghost small', onclick: () => turnBackTask(t) }, 'Retroceder')] : []),
+          ...(t.status !== 'DONE' ? [el('button', { class: 'btn ghost small', onclick: () => advanceTask(t) }, 'Avanzar')] : [])))); //tuve que buscar que eran esos 3 puntos y porque servian y el if no, asi que almenos aprendi algo nuevo
     });
   }
-
+  function turnBackTask(task){
+    const currentStatus = task.status;
+    let newStatus;
+    switch (currentStatus) {
+      case 'INPROGRESS':
+        newStatus = 'PENDING';
+        break;
+      case 'DONE':
+        newStatus = 'INPROGRESS';
+        break;
+    }
+    if (newStatus) {
+      guard(async () => {
+        await Api.tasks.update(targetUserId(), task.id, { status: newStatus });
+        await loadTasks();
+      });
+    }
+  }
+  function advanceTask(task){
+    const currentStatus = task.status;
+    let newStatus;
+    switch (currentStatus) {
+      case 'PENDING':
+        newStatus = 'INPROGRESS';
+        break;
+      case 'INPROGRESS':
+        newStatus = 'DONE';
+        break;
+    }
+    if (newStatus) {
+      guard(async () => {
+        await Api.tasks.update(targetUserId(), task.id, { status: newStatus });
+        await loadTasks();
+      });
+    }
+  }
   function openTaskDialog(task) {
     editingTaskId = task ? task.id : null;
     $('task-dialog-title').textContent = task ? 'Editar tarea' : 'Nueva tarea';
