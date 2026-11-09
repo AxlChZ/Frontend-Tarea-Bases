@@ -3,7 +3,6 @@ const Api = (() => {
   const onLog = (fn) => listeners.push(fn);
 
   const BASE_URL = 'http://localhost:8080';
-
   async function request(method, path, body) {
     const url = BASE_URL + '/api/v1' + path;
     const opts = { method, headers: {} };
@@ -15,6 +14,7 @@ const Api = (() => {
     let res;
     try {
       res = await fetch(url, opts);
+
     } catch (e) {
       entry.error = e.message;
       listeners.forEach((fn) => fn(entry));
@@ -38,7 +38,7 @@ const Api = (() => {
   return {
     onLog,
     users: {
-      list: () => request('GET', '/users'),
+      list: () => request('GET', '/users/byusername/'),
       //get: (id) => request('GET', `/users/${id}`), //Creeo que aqui es donde hace la busqueda por id
       get: (name) => request('GET', `/users/byusername/${name}`),
       create: (u) => request('POST', '/users', u),
